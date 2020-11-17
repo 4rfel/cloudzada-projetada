@@ -4,3 +4,4 @@ terraform.tfvars
 terraform-docker-demo
 terraform.tfstate
 terraform.tfstate.backup
+*.info

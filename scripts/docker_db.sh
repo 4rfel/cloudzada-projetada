@@ -10,8 +10,9 @@ sudo apt install git python3 -y
 cd /home/ubuntu
 mkdir database
 cd database
-
-cat > ./scripts/setup_db.sql <<EOF
+mkdir scripts
+cd scripts
+cat > ./setup_db.sql <<EOF
 DROP DATABASE IF EXISTS tasklist;
 CREATE DATABASE tasklist;
 
@@ -36,6 +37,7 @@ CREATE TABLE tasks (
     completed BOOLEAN
 );
 EOF
+cd ..
 
 crontab <<EOF
 @reboot sudo docker run -d -p 80:3306 --name=cloudzada-do-4-mysql \

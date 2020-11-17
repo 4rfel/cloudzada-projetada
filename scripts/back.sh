@@ -1,16 +1,16 @@
 #!/bin/bash
 sudo apt update
 
-sudo apt install git python3 python3-pip -y
+npm install express --save
 
-pip3 isntall uvicorn fastapi
-
-cd /home/ubuntu
+npm install body-parser --save
 
 git clone https://github.com/4rfel/cloudzada-projetada.git
 
+cd cloudzada-projetada/tasklist
+
 crontab <<EOF
-@reboot uvicorn tasklist.main:app --reload
+@reboot uvicorn cloudzada-projetada.tasklist.main:app --reload
 EOF
 
 # uvicorn tasklist.main:app --reload
