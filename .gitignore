@@ -1,3 +1,6 @@
 *.csv
 terraform.tfvars
 .terraform/*
+terraform-docker-demo
+terraform.tfstate
+terraform.tfstate.backup
