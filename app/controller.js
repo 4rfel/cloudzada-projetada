@@ -1,5 +1,5 @@
 const db = require("./models/index"); // models path depend on your structure
-const Tutorial = db.tutorials;
+const Task = db.taks;
 
 exports.create = (req, res) => {
   if (!req.body.title) {
