@@ -1,4 +1,6 @@
-#!/bin/bash
+#!/bin/sh
+mkdir aaaaaaaaa
+
 sudo apt update
 
 git clone https://github.com/4rfel/cloudzada-projetada.git

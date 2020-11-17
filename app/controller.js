@@ -1,4 +1,4 @@
-const db = require("../models"); // models path depend on your structure
+const db = require("./models/index"); // models path depend on your structure
 const Tutorial = db.tutorials;
 
 exports.create = (req, res) => {

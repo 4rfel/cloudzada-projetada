@@ -14,7 +14,7 @@ app.use(bodyParser.json());
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
-const db = require("./mpdels/models");
+const db = require("./models/index");
 db.sequelize.sync();
 
 app.get("/", (req, res) => {
