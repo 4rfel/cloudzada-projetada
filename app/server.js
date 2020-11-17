@@ -1,13 +1,27 @@
-var express = require('express');
+const express = require("express");
+const bodyParser = require("body-parser");
+const cors = require("cors");
+
 var app = express();
 
-app.get('/', function (req, res) {
-   res.send('Hello World');
-})
+var corsOptions = {
+	origin: "http://172.31.48.5:8080"
+};
 
-var server = app.listen(8081, function () {
-   var host = server.address().address
-   var port = server.address().port
-   
-   console.log("Example app listening at http://%s:%s", host, port)
+app.use(cors(corsOptions));
+
+app.use(bodyParser.json());
+
+app.use(bodyParser.urlencoded({ extended: true }));
+
+const db = require("./app/models");
+db.sequelize.sync();
+
+app.get("/", (req, res) => {
+  res.json({ message: "aaaaaaaaaa." });
+});	
+
+require("./routes")(app);
+
+var server = app.listen(8000, function () {
 })
