@@ -2,7 +2,7 @@ const db = require("./models/index"); // models path depend on your structure
 const Task = db.taks;
 
 exports.create = (req, res) => {
-  if (!req.body.title) {
+  if (!req.body.description) {
     res.status(400).send({
       message: "Content can not be empty!"
     });
@@ -10,7 +10,6 @@ exports.create = (req, res) => {
   }
 
   const task = {
-    uuid: req.body.uuid,
     description: req.body.description
   };
 
