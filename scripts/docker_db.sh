@@ -13,39 +13,47 @@ cd database
 mkdir scripts
 cd scripts
 cat > ./setup_db.sql <<EOF
-DROP DATABASE IF EXISTS tasklist;
-CREATE DATABASE tasklist;
+DROP DATABASE IF EXISTS bd_test;
+CREATE DATABASE bd_test;
 
-DROP USER IF EXISTS tasklist_admin@localhost;
-CREATE USER tasklist_admin@localhost IDENTIFIED BY "senha_root";
-GRANT ALL ON tasklist.* TO tasklist_admin@localhost;
-GRANT ALL ON tasklist_test.* TO tasklist_admin@localhost;
+DROP DATABASE IF EXISTS db_real;
+CREATE DATABASE db_real;
 
-DROP USER IF EXISTS tasklist_app@localhost;
-CREATE USER tasklist_app@localhost IDENTIFIED BY "senha_app";
-GRANT SELECT, INSERT, UPDATE, DELETE ON tasklist.* TO tasklist_app@localhost;
-GRANT SELECT, INSERT, UPDATE, DELETE ON tasklist_test.* TO tasklist_app@localhost;
+DROP USER IF EXISTS db_adm;
+CREATE USER db_adm IDENTIFIED BY "senha_segura_para_adm";
+GRANT ALL ON bd_test.* TO db_adm;
+GRANT ALL ON db_real.* TO db_adm;
+
+DROP USER IF EXISTS db_user;
+CREATE USER db_user IDENTIFIED BY "a-melhor-senha-q-vc-ja-viu";
+GRANT SELECT, INSERT, UPDATE, DELETE ON bd_test.* TO db_user;
+GRANT SELECT, INSERT, UPDATE, DELETE ON db_user.* TO db_real;
 
 COMMIT;
 
-USE tasklist;
+USE nollo_dev;
+DROP TABLE IF EXISTS todos;
 
-DROP TABLE IF EXISTS tasks;
-CREATE TABLE tasks (
-    uuid BINARY(16) PRIMARY KEY,
-    description NVARCHAR(1024)
-);
+CREATE TABLE todos (
+    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    title VARCHAR(50) NOT NULL,
+    description VARCHAR(120),
+    updated TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+COMMIT;
 EOF
 cd ..
 
 crontab <<EOF
-@reboot sudo docker run -d -p 80:3306 --name=cloudzada-do-4-mysql \
+@reboot sudo docker run -d -p 80:3306 --name=db_user \
     -e MYSQL_ROOT_PASSWORD="a-melhor-senha-q-vc-ja-viu" \
     -v ./scripts:/docker-entrypoint-initdb.d \
     mysql:latest
 EOF
 
-sudo docker run -d -p 80:3306 --name=cloudzada-do-4-mysql \
+sudo docker run -d -p 80:3306 --name=db_user \
     -e MYSQL_ROOT_PASSWORD="a-melhor-senha-q-vc-ja-viu" \
     -v ./scripts:/docker-entrypoint-initdb.d \
     mysql:latest
