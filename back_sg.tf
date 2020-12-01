@@ -1,4 +1,4 @@
-data "aws_vpc" "default" {
+data "aws_vpc" "default_back" {
 	provider    = aws.region_back
 	default = true
 }
@@ -11,7 +11,7 @@ module "backend_sg" {
 
 	name        = "backend-sg"
 	description = "Backends SG."
-	vpc_id      = data.aws_vpc.default.id
+	vpc_id      = data.aws_vpc.default_back.id
 
 	ingress_with_cidr_blocks = [
 	{
@@ -61,7 +61,7 @@ module "backend_sg_db" {
 
 	name        = "backend-sg-db"
 	description = "Backends SG."
-	vpc_id      = data.aws_vpc.default.id
+	vpc_id      = data.aws_vpc.default_back.id
 
 	ingress_with_cidr_blocks = [
 	{

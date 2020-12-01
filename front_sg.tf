@@ -1,4 +1,4 @@
-data "aws_vpc" "default" {
+data "aws_vpc" "default_front" {
 	provider    = aws.region_front
 	default = true
 }
@@ -11,7 +11,7 @@ module "frontend_sg" {
 
 	name        = "frontend-sg"
 	description = "frontends SG."
-	vpc_id      = data.aws_vpc.default.id
+	vpc_id      = data.aws_vpc.default_front.id
 
 	ingress_with_cidr_blocks = [
 	{

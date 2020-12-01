@@ -1,4 +1,4 @@
-data "aws_ami" "ubuntu18" {
+data "aws_ami" "ubuntu18_back" {
 	provider    = aws.region_back
 	most_recent = true
 
@@ -15,9 +15,9 @@ data "aws_ami" "ubuntu18" {
 	owners = ["099720109477"]
 }
 
-resource "aws_key_pair" "arfel_ssh" {
+resource "aws_key_pair" "arfel_ssh_back" {
 	provider   = aws.region_back
-	key_name   = "arfel_ssh"
+	key_name   = "arfel_ssh_back"
 	public_key = file("C:/Users/arfom/.ssh/id_rsa.pub")
 }
 
@@ -25,11 +25,11 @@ resource "aws_instance" "backend-instance" {
 	provider               = aws.region_back
 	depends_on             = [module.backend_sg]
 	vpc_security_group_ids = [module.backend_sg.this_security_group_id]
-	ami                    = data.aws_ami.ubuntu18.id
+	ami                    = data.aws_ami.ubuntu18_back.id
 	instance_type          = "t2.micro"
 	subnet_id              = "subnet-1957ff27"
 	private_ip             = "172.31.48.4"
-	key_name               = "arfel_ssh"
+	key_name               = "arfel_ssh_back"
 	user_data = file("./scripts/back.sh")
 	tags = {
 		Owner = "arfel"
@@ -41,9 +41,9 @@ resource "aws_instance" "backend-instance-db" {
 	provider               = aws.region_back
 	depends_on             = [module.backend_sg_db]
 	vpc_security_group_ids = [module.backend_sg_db.this_security_group_id]
-	ami                    = data.aws_ami.ubuntu18.id
+	ami                    = data.aws_ami.ubuntu18_back.id
 	instance_type          = "t2.micro"
-	key_name               = "arfel_ssh"
+	key_name               = "arfel_ssh_back"
 	subnet_id              = "subnet-1957ff27"
 	private_ip             = "172.31.48.5"
 
