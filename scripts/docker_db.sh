@@ -5,8 +5,6 @@ sudo sh get-docker.sh
 
 sudo apt update
 
-sudo apt install git python3 -y
-
 cd /home/ubuntu
 mkdir database
 cd database
@@ -19,19 +17,19 @@ CREATE DATABASE bd_test;
 DROP DATABASE IF EXISTS db_real;
 CREATE DATABASE db_real;
 
-DROP USER IF EXISTS db_adm;
-CREATE USER db_adm IDENTIFIED BY "senha_segura_para_adm";
-GRANT ALL ON bd_test.* TO db_adm;
-GRANT ALL ON db_real.* TO db_adm;
+DROP USER IF EXISTS db_adm@"%";
+CREATE USER db_adm@"%" IDENTIFIED BY "senha_segura_para_adm";
+GRANT ALL ON bd_test.* TO db_adm@"%";
+GRANT ALL ON db_real.* TO db_adm@"%";
 
-DROP USER IF EXISTS db_user;
-CREATE USER db_user IDENTIFIED BY "a-melhor-senha-q-vc-ja-viu";
-GRANT SELECT, INSERT, UPDATE, DELETE ON bd_test.* TO db_user;
-GRANT SELECT, INSERT, UPDATE, DELETE ON db_user.* TO db_real;
+DROP USER IF EXISTS db_user@"%";
+CREATE USER db_user@"%" IDENTIFIED BY "a-melhor-senha-q-vc-ja-viu";
+GRANT SELECT, INSERT, UPDATE, DELETE ON bd_test.* TO db_user@"%";
+GRANT SELECT, INSERT, UPDATE, DELETE ON db_real.* TO db_user@"%";
 
 COMMIT;
 
-USE nollo_dev;
+USE db_real;
 DROP TABLE IF EXISTS todos;
 
 CREATE TABLE todos (
@@ -49,11 +47,11 @@ cd ..
 crontab <<EOF
 @reboot sudo docker run -d -p 80:3306 --name=db_user \
     -e MYSQL_ROOT_PASSWORD="a-melhor-senha-q-vc-ja-viu" \
-    -v ./scripts:/docker-entrypoint-initdb.d \
+    -v /home/ubuntu/database/scripts:/docker-entrypoint-initdb.d \
     mysql:latest
 EOF
 
 sudo docker run -d -p 80:3306 --name=db_user \
     -e MYSQL_ROOT_PASSWORD="a-melhor-senha-q-vc-ja-viu" \
-    -v ./scripts:/docker-entrypoint-initdb.d \
+    -v /home/ubuntu/database/scripts:/docker-entrypoint-initdb.d \
     mysql:latest
