@@ -60,7 +60,7 @@ module "front_asg" {
 	security_groups = [module.frontend_sg.this_security_group_id]
 	load_balancers  = [module.frontend_elb.this_elb_id]
 
-	# Auto scaling group
+
 	asg_name                  = "front-asg"
 	vpc_zone_identifier       = ["subnet-b9e8dfd1", "subnet-c1cd198d", "subnet-e7e4899d"]
 	health_check_type         = "EC2"
@@ -83,10 +83,6 @@ module "front_asg" {
 	]
 }
 
-#===================================================================================
-# Scaling Policies for the Autoscaling Group
-#===================================================================================
-# Scale up settings.
 resource "aws_autoscaling_policy" "new_instance" {
   provider               = aws.region_front
   depends_on             = [module.front_asg]
@@ -117,7 +113,6 @@ resource "aws_cloudwatch_metric_alarm" "webserver_cpu_alarm_up" {
   alarm_actions     = [aws_autoscaling_policy.new_instance.arn]
 }
 
-# Scale down settings.
 resource "aws_autoscaling_policy" "kill_instance" {
   provider               = aws.region_front
   depends_on             = [module.front_asg]
@@ -148,9 +143,6 @@ resource "aws_cloudwatch_metric_alarm" "webserver_cpu_alarm_down" {
   alarm_actions     = [aws_autoscaling_policy.kill_instance.arn]
 }
 
-#===================================================================================
-# Elastic Load Balancer
-#===================================================================================
 module "frontend_elb" {
   source = "terraform-aws-modules/elb/aws"
   providers = {
